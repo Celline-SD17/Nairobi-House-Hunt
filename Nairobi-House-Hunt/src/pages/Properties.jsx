@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { fetchProperties } from "../services/api";
+import PropertyCard from "../components/PropertyCard";
 
 function Properties(){
     const [properties, setProperties] = useState([]);
@@ -28,14 +29,12 @@ function Properties(){
         <div>
             <h1>Nairobi House Hunt</h1>
             <p>{properties.length} properties found</p>
-            {properties.map((property) => (
-                <div key={property.id}>
-                    <h2>{property.title}</h2>
-                    <p>{property.location}</p>
-                    <p>{property.currency} {property.price}</p>
-                    <p>{property.bedrooms} bedrooms</p>
-                </div>
-            ))}
+            <div className="property-grid">
+                {properties.map((property) => (
+                    <PropertyCard key={property.id} property={property} />
+                    ))}
+            </div>
+
         </div>
     );
 
