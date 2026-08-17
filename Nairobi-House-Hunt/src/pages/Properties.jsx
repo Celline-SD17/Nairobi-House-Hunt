@@ -60,7 +60,7 @@ function Properties(){
     
     return (
         <main>
-            <h1>Nairobi House Hunt</h1>
+            
             <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
             <div className="filter-container">
                 <label htmlFor="bedrooms">Bedrooms</label>
