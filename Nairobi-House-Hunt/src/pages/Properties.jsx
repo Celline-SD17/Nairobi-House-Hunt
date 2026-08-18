@@ -11,6 +11,7 @@ function Properties(){
     const [bedroomFilter, setBedroomFilter] = useState("");
     const [maxPrice, setMaxPrice] = useState("");
     const [sortOption, setSortOption] = useState("");
+    const [favorites, setFavorites] = useState([]);
 
 
     //Fetching from API
@@ -25,6 +26,16 @@ function Properties(){
             setLoading(false);
         });
     }, []);
+
+    //Adding to favorites
+    const toggleFavorite = (propertyId) => {
+        setFavorites((currentFavorites) => {
+            if (currentFavorites.includes(propertyId)) {
+                return currentFavorites.filter((id) => id !== propertyId);
+            }
+            return [...currentFavorites, propertyId];
+        });
+    }; 
   //Searching for properties
     const filteredProperties = properties.filter((property) => {
         const search = searchTerm.toLowerCase();
@@ -103,7 +114,7 @@ function Properties(){
             <p>{filteredProperties.length} properties found</p>
             <div className="property-grid">
                 {sortedProperties.map((property) => (
-                    <PropertyCard key={property.id} property={property} />
+                    <PropertyCard key={property.id} property={property} isFavorite={favorites.includes(property.id)} onToggleFavorite={toggleFavorite} />
                     ))}
             </div>
 

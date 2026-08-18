@@ -1,4 +1,4 @@
-function PropertyCard({ property }){
+function PropertyCard({ property, isFavorite, onToggleFavorite }){
     return (
         <article className="property-card"> 
             <h2>{property.title}</h2>
@@ -12,6 +12,9 @@ function PropertyCard({ property }){
             <a href={property.url} target="_blank" rel="noreferrer">
                 View Listing
             </a>
+            <button onClick={() => onToggleFavorite(property.id)}>
+                {isFavorite ? "❤️ Remove from Favorites" : "🤍 Add to Favorites"}
+            </button>
         </article>
     );
 }
