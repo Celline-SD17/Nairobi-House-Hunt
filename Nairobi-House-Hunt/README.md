@@ -109,5 +109,7 @@ src/
     * CRUD operations
     * A custom property API
     * Additional property management functionality
+    * The project should feature CRUD operations for a house owner once a database is developed, for house owners to add, update or delete properties in the app. 
+
     
 
