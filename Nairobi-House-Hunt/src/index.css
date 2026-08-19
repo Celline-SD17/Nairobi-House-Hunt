@@ -75,6 +75,7 @@ main {
   font-weight: bold;
   letter-spacing: 2px;
   margin-bottom: 15px;
+  color:#11ef09
 }
 .hero h2{
   font-size: 48px;
@@ -129,7 +130,7 @@ main {
 .feature {
   background-color: white;
   padding: 30px 24px;
-  border: 1px solid #ddd;
+  border: 1px solid hsl(95, 95%, 48%);
   border-radius: 10px;
 }
 
@@ -222,7 +223,7 @@ main {
 .search-container input {
   width: 100%;
   padding: 13px 16px;
-  border: 1px solid #ccc;
+  border: 1px solid hsl(103, 91%, 50%)#ccc;
   border-radius: 6px;
   font-size: 16px;
 }
@@ -237,7 +238,7 @@ main {
   padding: 20px;
   margin: 0 auto 20px;
   max-width: 1000px;
-  background-color: white;
+  background-color: hsl(103, 91%, 50%)
   border: 1px solid #ddd;
   border-radius: 10px;
 }
@@ -255,7 +256,7 @@ main {
 .filter-container select,
 .filter-container input {
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid hsl(103, 91%, 50%);
   border-radius: 6px;
   background-color: white;
   font-size: 14px;
@@ -279,7 +280,7 @@ main {
 /*Property cards*/
 .property-card {
   padding: 22px;
-  border: 1px solid #ddd;
+  border: 1px solid hsl(103, 91%, 50%);
   border-radius: 10px;
   background: white;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -375,18 +376,24 @@ main {
 /*About intro*/
 .about-intro {
   text-align: center;
-  margin-bottom: 50px;
+  margin-bottom: 30px;
+  background-color: white;
+  padding: 45px; 
+  border: 1px solid #11ef09;
+  border-radius: 12px;
 }
 
 .about-intro h2 {
+  color:#5ef407
   font-size: 36px;
   margin-bottom: 20px;
+  margin-top: 0;
 }
-
 .about-intro p {
   max-width: 750px;
-  margin: 0 auto 15px;
-  line-height: 1.7;
+  margin: 0 auto 18px;
+  margin: 0 auto 18px;
+  line-height: 1.8;
   color: #555;
 }
 
@@ -395,7 +402,7 @@ main {
   background-color: white;
   padding: 30px;
   margin-bottom: 25px;
-  border: 1px solid #ddd;
+  border: 1px solid #5ef407;
   border-radius: 10px;
 }
 
@@ -425,7 +432,7 @@ main {
 
 .how-it-works > div {
   padding: 20px;
-  background-color: #f5f7f9;
+  background-color: lch(75.55% 41.42 227.15);
   border-radius: 8px;
 }
 
@@ -457,7 +464,7 @@ main {
   margin: 50px auto;
   padding: 35px;
   background-color: white;
-  border: 1px solid #ddd;
+  border: 1px solid hsl(103, 91%, 50%);
   border-radius: 10px;
 }
 

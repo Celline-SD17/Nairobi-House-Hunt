@@ -7,13 +7,13 @@ function About(){
                 Nairobi House Hunt is a property search application designed to make
                 finding rental homes in Nairobi simpler and more convenient.
                 </p>
-        <p>
-          House hunting in Nairobi involves going to different towns, viewing different properties, 
-          and comparing them based on location, number of bedrooms, and price.
-          Nairobi House Hunt brings these options together in a simple,
-          user-friendly interface.
-        </p>
-      </section>
+                <p>
+                House hunting in Nairobi involves going to different towns, viewing different properties, 
+                and comparing them based on location, number of bedrooms, and price.
+                Nairobi House Hunt brings these options together in a simple,
+                user-friendly interface.
+                </p>
+            </section>
 
       <section className="about-section">
         <h2>The Problem</h2>
