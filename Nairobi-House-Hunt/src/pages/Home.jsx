@@ -1,25 +1,40 @@
 import { Link } from "react-router-dom";
 function Home(){
     return (
-    <main>
-        <section>
-            <h1>Find Your Next Home in Nairobi</h1>
-            <p>
+    <main className="home-page">
+        <section className="hero">
+            <div className="hero-content">
+                <p className="hero-label">NAIROBI RENTAL PROPERTIES </p>
+
+                <h2>Find a place that feels like home.</h2>
+                <p>
                 Discover rental properties across Nairobi and find a place that fits your
                 needs and budget.
-            </p>
+                </p>
+                <Link to="/properties" className="browse-button">Browse Properties</Link>
 
-            <Link to="/properties">Browse Properties</Link>
+            </div> 
         </section>
 
-        <section>
-            <h2>Explore Nairobi</h2>
-            <p>Browse rental properties in some of Nairobi's popular areas.</p>
-            <div>
-                <span>Kilimani</span>
-                <span>Lavington</span>
-                <span>Westlands</span>
-                <span>Parklands</span>
+        <section className="home-features">
+            <h2>House hunting made simpler</h2>
+            <p>Find properties faster by narrowing your search to what matters most.</p>
+            <div className="feature-grid">
+                <div className="feature">
+                    <h3>🔎 Search</h3>
+                    <p>Search properties by location, area, city, or property name.</p>
+                </div>
+                <div className="feature">
+                    <h3>🎯 Filter</h3>
+                    <p>Narrow your options by bedrooms and maximum monthly rent.</p>
+                </div>
+                <div className="feature">
+                    <h3>↕️ Sort</h3>
+                    <p>
+                    Sort available properties by price to find options within your
+                    budget.
+                    </p>
+                </div>
             </div>
         </section>
     </main>    

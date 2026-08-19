@@ -9,7 +9,7 @@ function PropertyCard({ property, isFavorite, onToggleFavorite }){
                 <p>{property.bathrooms} Bathrooms</p>
             )}
             <p>{property.propertyType}</p>
-            <a href={property.url} target="_blank" rel="noreferrer">
+            <a href={property.url} target="_blank" rel="noreferrer" className="view-listing">
                 View Listing
             </a>
             <button onClick={() => onToggleFavorite(property.id)}>

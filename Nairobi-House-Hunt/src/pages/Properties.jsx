@@ -70,48 +70,51 @@ function Properties(){
     }
     
     return (
-        <main>
-            
+        <main className="properties-page">
+            <h2>Available properties</h2>
             <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
-            <div className="filter-container">
-                <label htmlFor="bedrooms">Bedrooms</label>
-                <select
-                id="bedrooms" 
-                value={bedroomFilter}
-                onChange={(event) => setBedroomFilter(event.target.value)}
-                >
+            <div className="filters-panel">
+                <div className="filter-container">
+                    <label htmlFor="bedrooms">Bedrooms</label>
+                    <select
+                    id="bedrooms" 
+                    value={bedroomFilter}
+                    onChange={(event) => setBedroomFilter(event.target.value)}
+                    >
                     <option value="">Any</option>
                     <option value="1">1 Bedroom</option>
                     <option value="2">2 Bedrooms</option>
                     <option value="3">3 Bedrooms</option>
                     <option value="4">4 Bedrooms</option>
                     <option value="5">5 Bedrooms</option>
-                </select>
-            </div>
-            <div className="filter-container">
-                <label htmlFor="maxPrice">Maximum Monthly Rent</label>
+                    </select>
+                </div>
+                <div className="filter-container">
+                    <label htmlFor="maxPrice">Maximum Monthly Rent</label>
                     <input 
                     type="number" 
                     id="maxPrice"
                     placeholder="e.g. 100000"
                     value={maxPrice}
                     onChange={(event) =>setMaxPrice(event.target.value)}
-                />
-            </div>
-            <div className="filter-container">
-                <label htmlFor="sort">Sort By</label>
-                <select
-                id="sort"
-                value={sortOption}
-                onChange={(event)=>setSortOption(event.target.value)}
-                >
+                    />
+                </div>
+                <div className="filter-container">
+                    <label htmlFor="sort">Sort By</label>
+                    <select
+                    id="sort"
+                    value={sortOption}
+                    onChange={(event)=>setSortOption(event.target.value)}
+                    >
                     <option value="">Default</option>
                     <option value="price-low">Price: Low to High</option>
                     <option value="price-high">Price: High to Low</option>
-                </select>
+                    </select>
+                </div>
             </div>
+
             
-            <p>{filteredProperties.length} properties found</p>
+            <p className="property-count">{filteredProperties.length} properties found</p>
             <div className="property-grid">
                 {sortedProperties.map((property) => (
                     <PropertyCard key={property.id} property={property} isFavorite={favorites.includes(property.id)} onToggleFavorite={toggleFavorite} />
