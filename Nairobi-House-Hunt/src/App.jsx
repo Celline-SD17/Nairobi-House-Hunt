@@ -10,8 +10,8 @@ import Signup from "./pages/Signup"
 function App(){
   return(
     <>
-    <header>
-      <h1>Nairobi House Hunt</h1>
+    <header className="site-header">
+      <h1 className="site-title">Nairobi House Hunt</h1>
       <Navbar />
     </header>
 

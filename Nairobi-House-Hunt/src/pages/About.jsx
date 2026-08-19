@@ -1,7 +1,7 @@
 function About(){
     return (
         <main className="about-page">
-            <section classname="about-intro">
+            <section className="about-intro">
                 <h2>About Nairobi House Hunt</h2>
                 <p>
                 Nairobi House Hunt is a property search application designed to make
@@ -74,25 +74,7 @@ function About(){
       </section>
 
       <section className="about-section">
-        <h2>Where Does the Property Data Come From?</h2>
-
-        <p>
-          During Phase 1, Nairobi House Hunt uses publicly available property
-          listing data from an external real estate data source. This allows
-          the application to demonstrate how a React frontend can fetch,
-          process, and display real-world data.
-        </p>
-      </section>
-
-      <section className="about-section">
-        <h2>Future Development</h2>
-
-        <p>
-          Nairobi House Hunt is designed to grow beyond this initial React
-          frontend. Future versions will introduce a Flask backend and a
-          database for managing property and user data.
-        </p>
-
+        <h2>Authentication and Authorization</h2>
         <p>
           Authentication and authorization will also allow users to create
           accounts and eventually manage their own property-related data and
