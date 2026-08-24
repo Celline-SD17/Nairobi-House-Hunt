@@ -6,7 +6,7 @@ class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
-    password_hash = db.Column (db.string(128), nullable=False)
+    password_hash = db.Column (db.String(128), nullable=False)
     role = db.Column(db.String(20), nullable=False)
 
 
@@ -42,19 +42,18 @@ class Property(db.Model):
         return f"<Property {self.title}>"
 
 
-
-
 class Favorite(db.Model):
     __tablename__ = "favorites"
 
     id = db.Column(db.Integer, primary_key=True)
     notes = db.Column(db.Text, nullable=True)
-    user_id = db.Column(db.integer, db.ForeignKey("users.id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     property_id =db.Column(db.Integer, db.ForeignKey("properties.id"), nullable=False)
 
     user = db.relationship("User", back_populates="favorites")
-    property = db.relationship("property", back_populates="favorites")
-    __table_args__ = (db.UniqueConstraint("user_id", "property_id", name="unique_user_property_favorite"))
+    property = db.relationship("Property", back_populates="favorites")
+    __table_args__ = (db.UniqueConstraint("user_id", "property_id", name="unique_user_property_favorite"),
+                      )
 
     def __repr__(self):
         return f"<Favorite User {self.user_id} Property{self.property_id}>"
