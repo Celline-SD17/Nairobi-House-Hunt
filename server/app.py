@@ -151,9 +151,29 @@ def logout():
 #Properties routes
 @app.get("/properties")
 def get_properties():
-    properties = Property.query.all()
-    return PropertySchema(many=True).dump(properties), 200
+    page = request.args.get("page", 1, type=int)
+    per_page = request.args.get("per_page", 10, type=int)
 
+    if page < 1 or per_page < 1:
+        return {"error": "page and per page must be positive numbers"}, 400
+    pagination = Property.query.paginate(
+        page=page,
+        per_page=per_page,
+        error_out=False
+    )
+    properties = PropertySchema(many=True).dump(pagination.items)
+
+    return {
+        "properties": properties,
+        "pagination": {
+            "page": pagination.page,
+            "per_page": pagination.per_page,
+            "total": pagination.total,
+            "pages": pagination.pages,
+            "has_next": pagination.has_next,
+            "has_prev": pagination.has_prev
+        }
+    }, 200
 #Viewing properties by ID
 @app.get("/properties/<int:id>")
 def get_property(id):
@@ -195,6 +215,17 @@ def create_property():
     db.session.commit()
 
     return PropertySchema().dump(property), 201
+
+#Landlord viewing their properties
+@app.get("/my-properties")
+def get_my_properties():
+    user = require_role("landlord")
+    if isinstance(user, tuple):
+        return user
+    properties = Property.query.filter_by(
+        landlord_id=user.id
+    ).all()
+    return PropertySchema(many=True).dump(properties), 200
 
 #Update property
 @app.patch("/properties/<int:id>")
