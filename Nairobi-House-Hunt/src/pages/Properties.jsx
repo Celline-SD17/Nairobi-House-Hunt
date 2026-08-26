@@ -3,6 +3,7 @@ import { fetchProperties, fetchFavorites, addFavorite, deleteFavorite } from "..
 import PropertyCard from "../components/PropertyCard";
 import SearchBar from "../components/SearchBar";
 import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom"
 
 function Properties(){
     const [properties, setProperties] = useState([]);
@@ -14,6 +15,7 @@ function Properties(){
     const [sortOption, setSortOption] = useState("");
     const [favorites, setFavorites] = useState([]);
     const { user } = useAuth();
+    const navigate = useNavigate()
     const [page, setPage] = useState(1)
     const [pagination, setPagination] = useState({
         page: 1, 
@@ -52,36 +54,34 @@ function Properties(){
     }, [page, searchTerm, bedroomFilter, maxPrice, sortOption]);
     //Adding to favorites
     const toggleFavorite = async (propertyId) => {
-        if (!user) {
-            return;
-        }
-
-        const existingFavorite = favorites.find(
-            (favorite) => favorite.property_id === propertyId
-        );
-
-        try {
-            if (existingFavorite) {
-                await deleteFavorite(existingFavorite.id);
-
-                setFavorites((currentFavorites) =>
-                    currentFavorites.filter(
-                        (favorite) => favorite.id !== existingFavorite.id
-                    )
+    if (!user) {
+        return "login required";
+    }
+    if (user.role !== "hunter") {
+        setError("Only house hunters can save favorites.");
+        return;
+    }
+    const existingFavorite = favorites.find(
+        (favorite) => favorite.property_id === propertyId
+    );
+    try {
+        if (existingFavorite) {
+            await deleteFavorite(existingFavorite.id);
+            setFavorites((currentFavorites) =>
+                currentFavorites.filter(
+                    (favorite) => favorite.id !== existingFavorite.id)
                 );
-            } else {
-                const newFavorite = await addFavorite(propertyId);
-
-                setFavorites((currentFavorites) => [
-                    ...currentFavorites,
-                    newFavorite
-                ]);
-            }
-        } catch (error) {
-            setError(error.message);
-        }
-    };
-
+            } 
+        else {
+            const newFavorite = await addFavorite(propertyId);
+            setFavorites((currentFavorites) => [
+                ...currentFavorites,newFavorite
+            ]);
+        }} 
+    catch (error) {
+        setError(error.message);
+    }
+};
     useEffect(() => {
         if (!user || user.role !== "hunter") {
             setFavorites([]);
@@ -143,6 +143,16 @@ function Properties(){
 
             
             <p className="property-count">{pagination.total} properties found</p>
+            {error && (
+                <div className="error-message">
+                    <p>{error}</p>
+                    {!user && (
+                        <button onClick={() => navigate("/login")}>
+                            Log In
+                        </button>
+                    )}
+                </div>
+            )}
             <div className="property-grid">
                 {properties.map((property) => (
                     <PropertyCard
