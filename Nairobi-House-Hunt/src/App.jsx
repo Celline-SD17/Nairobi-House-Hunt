@@ -7,10 +7,11 @@ import Login from "./pages/Login";
 import Favorites from "./pages/Favorites"
 import LandlordDashboard from "./pages/LandlordDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
+import PropertyDetails from "./pages/PropertyDetails";
 
 function App() {
     return (
-        <>
+    <>
             <header className="site-header">
                 <h1 className="site-title">Nairobi House Hunt</h1>
                 <Navbar />
@@ -32,9 +33,11 @@ function App() {
                         <LandlordDashboard />
                     </ProtectedRoute>
                 } />
+                <Route path="/properties/:id" element={<PropertyDetails />} 
+                />
             </Routes>
-        </>
+    </>
     );
-}
+};
 
 export default App;
