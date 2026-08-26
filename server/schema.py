@@ -32,5 +32,9 @@ class FavoriteSchema(Schema):
     user_id = fields.Int(dump_only=True)
     property_id = fields.Int(required=True)
     notes = fields.Str(allow_none=True)
+    property = fields.Nested(
+        PropertySchema, 
+        dump_only=True
+    )
 
 

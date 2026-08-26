@@ -6,6 +6,7 @@ from flask_bcrypt import Bcrypt
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from marshmallow import ValidationError
+from flask_cors import CORS
 
 
 from configs import db
@@ -20,6 +21,11 @@ app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 
+CORS(
+    app, 
+    origins=["http://localhost:5173"],
+    supports_credentials=True
+)
 
 db.init_app(app)
 migrate = Migrate(app, db)
@@ -45,6 +51,8 @@ def require_role(role):
 #Before request
 @app.before_request
 def check_authentication():
+    if request.method == "OPTIONS":
+        return
     open_access_list = [
         "home",
         "about",
@@ -153,16 +161,51 @@ def logout():
 def get_properties():
     page = request.args.get("page", 1, type=int)
     per_page = request.args.get("per_page", 10, type=int)
+    search = request.args.get("search", "", type=str).strip()
+    bedrooms = request.args.get("bedrooms", None, type=int)
+    max_price = request.args.get("max_price", None, type=int)
+    sort = request.args.get("sort", "", type=str)
 
     if page < 1 or per_page < 1:
-        return {"error": "page and per page must be positive numbers"}, 400
-    pagination = Property.query.paginate(
+        return {"error": "page and per_page must be positive numbers"}, 400
+
+    query = Property.query
+
+    #Searching by title, location, area, or property type
+    if search:
+        search_term = f"%{search}%"
+        query = query.filter(
+            db.or_(
+                Property.title.ilike(search_term),
+                Property.location.ilike(search_term),
+                Property.area.ilike(search_term),
+                Property.property_type.ilike(search_term)
+            )
+        )
+
+    #Bedroom filter
+    if bedrooms:
+        query = query.filter(Property.bedrooms == bedrooms)
+
+    #Maximum price filter
+    if max_price:
+        query = query.filter(Property.price <= max_price)
+
+    # Sorting
+    if sort == "price-low":
+        query = query.order_by(Property.price.asc())
+    elif sort == "price-high":
+        query = query.order_by(Property.price.desc())
+    else:
+        query = query.order_by(Property.id.asc())
+
+    pagination = query.paginate(
         page=page,
         per_page=per_page,
         error_out=False
     )
-    properties = PropertySchema(many=True).dump(pagination.items)
 
+    properties = PropertySchema(many=True).dump(pagination.items)
     return {
         "properties": properties,
         "pagination": {

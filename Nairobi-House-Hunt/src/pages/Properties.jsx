@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { fetchProperties } from "../services/api";
+import { fetchProperties, fetchFavorites, addFavorite, deleteFavorite } from "../services/api";
 import PropertyCard from "../components/PropertyCard";
 import SearchBar from "../components/SearchBar";
+import { useAuth } from "../context/AuthContext";
 
 function Properties(){
     const [properties, setProperties] = useState([]);
@@ -12,12 +13,32 @@ function Properties(){
     const [maxPrice, setMaxPrice] = useState("");
     const [sortOption, setSortOption] = useState("");
     const [favorites, setFavorites] = useState([]);
+    const { user } = useAuth();
+    const [page, setPage] = useState(1)
+    const [pagination, setPagination] = useState({
+        page: 1, 
+        per_page: 10,
+        total: 0,
+        pages: 0,
+        has_next: false,
+        has_prev: false
+    });
 
-
-    //Fetching from API
+    // Resetting to page 1 when filters apply
     useEffect(() => {
-        fetchProperties()
-        .then((data)=> {setProperties(data);
+        setPage(1);
+    }, [searchTerm, bedroomFilter, maxPrice, sortOption]);
+
+    //Fetching from postgreSQL database
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setLoading(true);
+        fetchProperties(
+            page,10, searchTerm, bedroomFilter, maxPrice, sortOption
+        )
+        .then((data) => {
+            setProperties(data.properties);
+            setPagination(data.pagination);
         })
         .catch((error) => {
             setError(error.message);
@@ -25,49 +46,56 @@ function Properties(){
         .finally(() => {
             setLoading(false);
         });
-    }, []);
+    }, 300);
 
+    return () => clearTimeout(timer);
+    }, [page, searchTerm, bedroomFilter, maxPrice, sortOption]);
     //Adding to favorites
-    const toggleFavorite = (propertyId) => {
-        setFavorites((currentFavorites) => {
-            if (currentFavorites.includes(propertyId)) {
-                return currentFavorites.filter((id) => id !== propertyId);
+    const toggleFavorite = async (propertyId) => {
+        if (!user) {
+            return;
+        }
+
+        const existingFavorite = favorites.find(
+            (favorite) => favorite.property_id === propertyId
+        );
+
+        try {
+            if (existingFavorite) {
+                await deleteFavorite(existingFavorite.id);
+
+                setFavorites((currentFavorites) =>
+                    currentFavorites.filter(
+                        (favorite) => favorite.id !== existingFavorite.id
+                    )
+                );
+            } else {
+                const newFavorite = await addFavorite(propertyId);
+
+                setFavorites((currentFavorites) => [
+                    ...currentFavorites,
+                    newFavorite
+                ]);
             }
-            return [...currentFavorites, propertyId];
-        });
-    }; 
-  //Searching for properties
-    const filteredProperties = properties.filter((property) => {
-        const search = searchTerm.toLowerCase();
-        const matchesSearch =
-            property.title?.toLowerCase().includes(search) ||
-            property.location?.toLowerCase().includes(search) ||
-            property.area?.toLowerCase().includes(search) ||
-            property.city.toLowerCase().includes(search);
-        const matchesBedrooms =
-            bedroomFilter === "" ||
-            (bedroomFilter === "5"
-                ? property.bedrooms >= 5
-                : property.bedrooms === Number(bedroomFilter));
-        const matchesPrice =
-                maxPrice === "" || property.price <= Number(maxPrice);
-        return matchesSearch && matchesBedrooms && matchesPrice;    
-    });
-    const sortedProperties = [...filteredProperties];
-    if (sortOption === "price-low") {
-        sortedProperties.sort((a, b) => a.price -b.price);
+        } catch (error) {
+            setError(error.message);
+        }
+    };
 
-    }
-    if (sortOption === "price-high") {
-        sortedProperties.sort((a, b) => b.price - a.price);
-    }
+    useEffect(() => {
+        if (!user || user.role !== "hunter") {
+            setFavorites([]);
+            return;
+        }
 
-    if (loading) {
-        return <p>Loading Properties...</p>;
-    }
-    if (error) {
-        return <p>Error: {error}</p>;
-    }
+        fetchFavorites()
+            .then((data) => {
+                setFavorites(data);
+            })
+            .catch((error) => {
+                setError(error.message);
+            });
+    }, [user]);
     
     return (
         <main className="properties-page">
@@ -114,11 +142,34 @@ function Properties(){
             </div>
 
             
-            <p className="property-count">{filteredProperties.length} properties found</p>
+            <p className="property-count">{pagination.total} properties found</p>
             <div className="property-grid">
-                {sortedProperties.map((property) => (
-                    <PropertyCard key={property.id} property={property} isFavorite={favorites.includes(property.id)} onToggleFavorite={toggleFavorite} />
-                    ))}
+                {properties.map((property) => (
+                    <PropertyCard
+                    key={property.id}
+                    property={property}
+                    isFavorite={favorites.some(
+                        (favorite) => favorite.property_id === property.id
+                    )}
+                    onToggleFavorite={toggleFavorite}
+                    /> ))}
+            </div>
+
+            <div className="pagination">
+            <button onClick={() => setPage(page - 1)} disabled={!pagination.has_prev}>
+                Previous
+            </button>
+
+            <span>
+                Page {pagination.page} of {pagination.pages}
+            </span>
+
+            <button
+                onClick={() => setPage(page + 1)}
+                disabled={!pagination.has_next}
+            >
+                Next
+            </button>
             </div>
 
         </main>

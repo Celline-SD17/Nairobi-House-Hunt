@@ -12,6 +12,7 @@ marshmallow = "*"
 flask-bcrypt = "*"
 python-dotenv = "*"
 faker = "*"
+flask-cors = "*"
 
 [dev-packages]
 
