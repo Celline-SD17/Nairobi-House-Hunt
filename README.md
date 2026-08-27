@@ -197,17 +197,69 @@ Property listings contain information such as:
 * Property type
 * Description
 
-### Pagination
+## API Endpoints
 
-The properties endpoint uses pagination so users can browse listings in manageable pages.
+    - The Flask backend provides RESTful endpoints for authentication, properties, favorites, and landlord property management.
 
-Example:
+### General
 
-```text
+| Method | Endpoint | Description | Authentication |
+|---|---|---|---|
+| GET | `/` | Confirms that the API is running | Public |
+
+### Authentication
+
+| Method | Endpoint | Description | Authentication |
+|---|---|---|---|
+| POST | `/signup` | Creates a new house hunter or landlord account | Public |
+| POST | `/login` | Logs a user into the application and creates a session | Public |
+| GET | `/check_session` | Checks whether a user is currently authenticated | Public |
+| DELETE | `/logout` | Logs out the current user and clears the session | Required |
+
+### Properties
+
+| Method | Endpoint | Description | Authentication |
+|---|---|---|---|
+| GET | `/properties` | Returns a paginated list of available properties and supports search, filtering, and sorting | Public |
+| GET | `/properties/<id>` | Returns the full details of a specific property | Required |
+| POST | `/properties` | Creates a new property listing | Landlord |
+| GET | `/my-properties` | Returns properties belonging to the authenticated landlord | Landlord |
+| PATCH | `/properties/<id>` | Updates a property owned by the authenticated landlord | Landlord |
+| DELETE | `/properties/<id>` | Deletes a property owned by the authenticated landlord | Landlord |
+
+### Favorites
+
+| Method | Endpoint | Description | Authentication |
+|---|---|---|---|
+| POST | `/favorites` | Adds a property to the authenticated house hunter's favorites | House Hunter |
+| GET | `/favorites` | Returns the authenticated user's favorite properties | House Hunter |
+| GET | `/favorites/<id>` | Returns a specific favorite | House Hunter |
+| PATCH | `/favorites/<id>` | Updates notes for a favorite | House Hunter |
+| DELETE | `/favorites/<id>` | Removes a property from favorites | House Hunter |
+
+### Example Request
+
+Properties can be requested with pagination and optional search/filter/sort parameters:
+
+```
 GET /properties?page=1&per_page=10
 ```
 
-The response includes pagination information such as:
+- The response includes the property results together with pagination information such as the current page, total pages, total properties, and whether previous or next pages are available.
+
+
+
+### Pagination
+
+- The properties endpoint uses pagination so users can browse listings in manageable pages.
+
+Example:
+
+```
+GET /properties?page=1&per_page=10
+```
+
+- The response includes pagination information such as:
 
 * Current page
 * Number of items per page
@@ -218,7 +270,7 @@ The response includes pagination information such as:
 
 ## Project Structure
 
-```text
+```
 Client/
 │
 ├── Nairobi-House-Hunt/
@@ -252,17 +304,17 @@ Client/
 
 ### Frontend
 
-The React frontend is deployed with Vercel:
+- The React frontend is deployed with Vercel:
 
 https://nairobi-house-hunt-git-main-celline-sd17s-projects.vercel.app/
 
 ### Backend API
 
-The Flask backend is deployed with Render:
+- The Flask backend is deployed with Render:
 
 https://nairobi-house-hunt-api.onrender.com
 
-The backend uses a managed Render PostgreSQL database.
+- The backend uses a managed Render PostgreSQL database.
 
 ## Environment Variables
 
