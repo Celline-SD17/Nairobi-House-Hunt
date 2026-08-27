@@ -87,7 +87,15 @@ function Favorites() {
 
     return (
         <main className="favorites-page">
-            <h2>My Favorites</h2>
+            <div className="favorites-header">
+                <p className="section-label">YOUR SHORTLIST</p>
+                <h2>My Favorites.</h2>
+                <p>
+                Keep track of the homes you're considering and return to
+                their full listings whenever you're ready.
+                </p>
+            </div>
+
 
             {error && <p className="error-message">{error}</p>}
 
@@ -96,8 +104,8 @@ function Favorites() {
             ) : (
                 <div className="property-grid">
                     {favorites.map((favorite) => (
-                        <div
-                            className="property-card"
+                        <article
+                            className="favorite-card"
                             key={favorite.id}
                         >
                             <h3>{favorite.property.title}</h3>
@@ -185,7 +193,7 @@ function Favorites() {
                                     </div>
                                 </>
                             )}
-                        </div>
+                        </article>
                     ))}
                 </div>
             )}
