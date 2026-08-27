@@ -7,22 +7,27 @@ function PropertyCard({ property, isFavorite, onToggleFavorite }){
     const navigate = useNavigate();
     const handleFavoriteClick = async () => {
         const result = await onToggleFavorite(property.id);
+
         if (result === "login required") {
-            setFavoriteError("Please log in to add properties to your favorites.");
+            setFavoriteError(
+                "Please log in to add properties to your favorites."
+            );
+
             setTimeout(() => {
                 setFavoriteError("");
             }, 1500);
-        }
-        else if(result === "hunter-only"){
+        } else if (result === "hunter-only") {
+            setFavoriteError(
+                "Only house hunters can save favorites."
+            );
 
-            setFavoriteError("Only house hunters can save favorites.");
             setTimeout(() => {
                 setFavoriteError("");
             }, 1500);
         } else {
             setFavoriteError("");
         }
-    }; 
+    };
 
     return (
         <article className="property-card"> 
@@ -41,9 +46,11 @@ function PropertyCard({ property, isFavorite, onToggleFavorite }){
             {favoriteError && (
                 <div className="favorite-error">
                     <p>{favoriteError}</p>
-                    <button onClick={() => navigate("/login")}>
-                        Log In
-                    </button>
+                    {favoriteError.startsWith("Please log in") && (
+                        <button onClick={() => navigate("/login")}>
+                            Log In
+                        </button>
+                    )}
                 </div>
             )}
         </article>

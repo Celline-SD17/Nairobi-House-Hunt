@@ -157,14 +157,24 @@ function LandlordDashboard() {
 
     return (
         <main className="landlord-dashboard">
-            <h2>My Properties</h2>
+    
+        <div className="dashboard-header">
+            <div>
+                <p className="section-label">LANDLORD WORKSPACE</p>
+                <h2>My Properties</h2>
+                <p className="dashboard-intro">
+                    Manage the homes you currently have listed on Nairobi
+                    House Hunt.
+                </p>
+            </div>
 
             <button
                 className="add-property-button"
                 onClick={handleAddClick}
             >
-                {showForm ? "Cancel" : "Add Property"}
+                {showForm ? "Cancel" : "+ Add Property"}
             </button>
+        </div>
 
             {error && <p className="error-message">{error}</p>}
 

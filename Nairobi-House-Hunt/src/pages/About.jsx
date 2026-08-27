@@ -1,88 +1,170 @@
-function About(){
+
+function About() {
     return (
         <main className="about-page">
             <section className="about-intro">
-                <h2>About Nairobi House Hunt</h2>
-                <p>
-                Nairobi House Hunt is a property search application designed to make
-                finding rental homes in Nairobi simpler and more convenient.
+                <p className="about-eyebrow">
+                    NAIROBI HOUSE HUNT · ABOUT
                 </p>
+
+                <h2>
+                    Finding a home in Nairobi
+                    <br />
+                    shouldn't feel this hard.
+                </h2>
+
+                <p className="about-lead">
+                    Nairobi House Hunt is a property search application
+                    designed to make finding rental homes across Nairobi
+                    simpler, faster, and more convenient.
+                </p>
+
                 <p>
-                House hunting in Nairobi involves going to different towns, viewing different properties, 
-                and comparing them based on location, number of bedrooms, and price.
-                Nairobi House Hunt brings these options together in a simple,
-                user-friendly interface.
+                    Instead of jumping between different listings and trying
+                    to remember which properties fit your budget and needs,
+                    Nairobi House Hunt brings the search experience together
+                    in one place.
                 </p>
             </section>
 
-      <section className="about-section">
-        <h2>The Problem</h2>
+            <section className="about-section about-story">
+                <div className="about-section-heading">
+                    <p className="section-label">THE PROBLEM</p>
+                    <h2>House hunting can be exhausting.</h2>
+                </div>
 
-        <p>
-          Finding a suitable rental property can be time-consuming. Renters
-          often have specific requirements such as a particular location,
-          number of bedrooms, and a maximum monthly budget, making it difficult
-          to quickly narrow down available options.
-        </p>
-      </section>
+                <p>
+                    Finding a suitable rental property can take time. Renters
+                    often have specific requirements such as a particular
+                    neighbourhood, number of bedrooms, and maximum monthly
+                    budget, making it difficult to quickly narrow down the
+                    available options.
+                </p>
+            </section>
 
-      <section className="about-section">
-        <h2>The Solution</h2>
+            <section className="about-section about-solution">
+                <div className="about-section-heading">
+                    <p className="section-label">THE SOLUTION</p>
+                    <h2>Search for what actually matters.</h2>
+                </div>
 
-        <p>
-          Nairobi House Hunt allows users to search through rental properties
-          and narrow their results based on the things that matter most to
-          them.
-        </p>
+                <p>
+                    Nairobi House Hunt lets users explore available rental
+                    properties and narrow their results according to the
+                    details that matter most to them.
+                </p>
 
-        <ul>
-          <li>Search properties by location, area, city, or title.</li>
-          <li>Filter properties by number of bedrooms.</li>
-          <li>Set a maximum monthly rental budget.</li>
-          <li>Sort properties by price.</li>
-        </ul>
-      </section>
+                <div className="about-capabilities">
+                    <div className="about-capability">
+                        <span>01</span>
+                        <h3>Search</h3>
+                        <p>
+                            Search by location, area, city, or property title.
+                        </p>
+                    </div>
 
-      <section className="about-section">
-        <h2>How It Works</h2>
+                    <div className="about-capability">
+                        <span>02</span>
+                        <h3>Filter</h3>
+                        <p>
+                            Narrow results by bedrooms and maximum monthly
+                            rent.
+                        </p>
+                    </div>
 
-        <div className="how-it-works">
-          <div>
-            <h3>1. Search</h3>
-            <p>
-              Search for properties using locations, areas, cities, or
-              property names.
-            </p>
-          </div>
+                    <div className="about-capability">
+                        <span>03</span>
+                        <h3>Sort</h3>
+                        <p>
+                            Compare available properties by price.
+                        </p>
+                    </div>
 
-          <div>
-            <h3>2. Filter</h3>
-            <p>
-              Narrow your options by selecting the number of bedrooms and
-              setting your maximum monthly rent.
-            </p>
-          </div>
+                    <div className="about-capability">
+                        <span>04</span>
+                        <h3>Save</h3>
+                        <p>
+                            Save promising properties and manage your
+                            favorites.
+                        </p>
+                    </div>
+                </div>
+            </section>
 
-          <div>
-            <h3>3. Sort</h3>
-            <p>
-              Sort the available properties by price to help you find options
-              that fit your budget.
-            </p>
-          </div>
-        </div>
-      </section>
+            <section className="about-section">
+                <div className="about-section-heading">
+                    <p className="section-label">HOW IT WORKS</p>
+                    <h2>From search to shortlist.</h2>
+                </div>
 
-      <section className="about-section">
-        <h2>Authentication and Authorization</h2>
-        <p>
-          Authentication and authorization will also allow users to create
-          accounts and eventually manage their own property-related data and
-          preferences.
-        </p>
-      </section>
-    </main>
-  );
+                <div className="how-it-works">
+                    <article className="how-it-works-card">
+                        <span>01</span>
+                        <h3>Search</h3>
+                        <p>
+                            Explore rental properties across Nairobi using
+                            locations, areas, cities, or property names.
+                        </p>
+                    </article>
+
+                    <article className="how-it-works-card">
+                        <span>02</span>
+                        <h3>Refine</h3>
+                        <p>
+                            Use bedroom, budget, and price sorting options to
+                            narrow your choices.
+                        </p>
+                    </article>
+
+                    <article className="how-it-works-card">
+                        <span>03</span>
+                        <h3>Save</h3>
+                        <p>
+                            Create an account, save properties, and keep notes
+                            on the listings you want to remember.
+                        </p>
+                    </article>
+
+                    <article className="how-it-works-card">
+                        <span>04</span>
+                        <h3>Connect</h3>
+                        <p>
+                            Open a full listing to view property details and
+                            contact the landlord directly.
+                        </p>
+                    </article>
+                </div>
+            </section>
+
+            <section className="about-section about-auth">
+                <div className="about-section-heading">
+                    <p className="section-label">BUILT FOR TWO SIDES</p>
+                    <h2>Hunters search. Landlords manage.</h2>
+                </div>
+
+                <div className="about-auth-grid">
+                    <div>
+                        <span className="about-role">HOUSE HUNTERS</span>
+                        <p>
+                            Hunters can create accounts, save favorite
+                            properties, add notes, and access full listing
+                            details including landlord contact information.
+                        </p>
+                    </div>
+
+                    <div>
+                        <span className="about-role">LANDLORDS</span>
+                        <p>
+                            Landlords can create accounts, add properties,
+                            update their listings, and remove properties they
+                            no longer want to advertise.
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    );
 }
 
 export default About;
+

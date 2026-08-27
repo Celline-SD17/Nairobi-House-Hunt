@@ -48,17 +48,20 @@ function PropertyDetails() {
     }
     if (!user) {
         return (
-            <main className="property-details">
+            <main className="property-login-required">
                 <h2>Login Required</h2>
                 <p>
                     Please log in to view the full details of this property.
                 </p>
-                <button onClick={() => navigate("/login")}>
-                    Log In
-                </button>
-                <button onClick={() => navigate(-1)}>
-                    ← Back to Properties
-                </button>
+                <div className="property-login-actions">
+                    <button onClick={() => navigate("/login")}>
+                        Log In
+                    </button>
+                    <button onClick={() => navigate(-1)}>
+                        ← Back to Properties
+                    </button>
+                </div>
+                
             </main>
         );
     }
@@ -71,63 +74,105 @@ function PropertyDetails() {
     if (!property) {
         return <p>Property not found.</p>;
     }
-    return (
-        <main className="property-details">
-            <button onClick={() => navigate(-1)}>
-                ← Back to Properties
-            </button>
-            <h2>{property.title}</h2>
-            <p>
-                <strong>Rent:</strong>{" "}
-                {property.currency} {property.price.toLocaleString()}
-            </p>
-            <p>
-                <strong>Location:</strong> {property.location}
-            </p>
-            <p>
-                <strong>Area:</strong> {property.area}
-            </p>
-            <p>
-                <strong>Bedrooms:</strong> {property.bedrooms}
-            </p>
-            <p>
-                <strong>Bathrooms:</strong> {property.bathrooms}
-            </p>
-            <p>
-                <strong>Property Type:</strong> {property.property_type}
-            </p>
-            <p>
-                <strong>Description:</strong>
-            </p>
-            <p>{property.description}</p>
 
-            {property.landlord && (
-            <section className="landlord-contact">
-                <h3>Contact Landlord</h3>
+        return (
+            <main className="property-details">
+                <button
+                    className="back-button"
+                    onClick={() => navigate(-1)}
+                >
+                    ← Back to Properties
+                </button>
 
-                <p>
-                    <strong>Name:</strong>{" "}
-                    {property.landlord.username}
-                </p>
+                <div className="property-details-header">
+                    <p className="property-details-eyebrow">
+                        PROPERTY LISTING
+                    </p>
 
-                <p>
-                    <strong>Email:</strong>{" "}
-                    <a href={`mailto:${property.landlord.email}`}>
-                        {property.landlord.email}
-                    </a>
-                </p>
+                    <h2>{property.title}</h2>
 
-                <p>
-                    <strong>Phone:</strong>{" "}
-                    <a href={`tel:${property.landlord.phone}`}>
-                        {property.landlord.phone}
-                    </a>
-                </p>
-            </section>
-        )}
+                    <p className="property-details-price">
+                        {property.currency}{" "}
+                        {property.price.toLocaleString()}
+                        <span>/ month</span>
+                    </p>
 
-        </main>
-    );
+                    <p className="property-details-location">
+                        {property.location}
+                    </p>
+                </div>
+
+                <div className="property-facts">
+                    <div className="property-fact">
+                        <span className="property-fact-label">
+                            Area
+                        </span>
+                        <strong>{property.area}</strong>
+                    </div>
+
+                    <div className="property-fact">
+                        <span className="property-fact-label">
+                            Bedrooms
+                        </span>
+                        <strong>{property.bedrooms}</strong>
+                    </div>
+
+                    <div className="property-fact">
+                        <span className="property-fact-label">
+                            Bathrooms
+                        </span>
+                        <strong>{property.bathrooms}</strong>
+                    </div>
+
+                    <div className="property-fact">
+                        <span className="property-fact-label">
+                            Property Type
+                        </span>
+                        <strong>{property.property_type}</strong>
+                    </div>
+                </div>
+
+                <section className="property-description">
+                    <p className="property-section-label">
+                        ABOUT THIS PROPERTY
+                    </p>
+
+                    <p>{property.description}</p>
+                </section>
+
+                {property.landlord && (
+                    <section className="landlord-contact">
+                        <p className="property-section-label landlord-section-label">
+                            YOUR CONTACT
+                        </p>
+
+                        <h3>Contact Landlord</h3>
+
+                        <p>
+                            <strong>Name</strong>
+                            <span>{property.landlord.username}</span>
+                        </p>
+
+                        <p>
+                            <strong>Email</strong>
+                            <a href={`mailto:${property.landlord.email}`}>
+                                {property.landlord.email}
+                            </a>
+                        </p>
+
+                        <p>
+                            <strong>Phone</strong>
+                            <a href={`tel:${property.landlord.phone}`}>
+                                {property.landlord.phone}
+                            </a>
+                        </p>
+                    </section>
+                )}
+            </main>
+        );
+
+
+            
 }
 
 export default PropertyDetails;
