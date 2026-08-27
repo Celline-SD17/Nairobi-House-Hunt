@@ -8,6 +8,8 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     password_hash = db.Column (db.String(128), nullable=False)
     role = db.Column(db.String(20), nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=True)
+    phone = db.Column(db.String(30), unique=True, nullable=True)
 
 
     properties = db.relationship("Property", back_populates="landlord", cascade="all, delete-orphan")

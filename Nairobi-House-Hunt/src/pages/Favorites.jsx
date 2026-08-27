@@ -1,5 +1,6 @@
 
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
     fetchFavorites,
     updateFavorite,
@@ -118,6 +119,11 @@ function Favorites() {
                             <p>
                                 {favorite.property.property_type}
                             </p>
+                            <div className="property-actions">
+                                <Link to={`/properties/${favorite.property.id}`}>
+                                    View Listing
+                                </Link>
+                            </div>
 
                             {editingId === favorite.id ? (
                                 <div className="favorite-notes">

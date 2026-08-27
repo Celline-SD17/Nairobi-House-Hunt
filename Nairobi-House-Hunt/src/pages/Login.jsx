@@ -10,7 +10,9 @@ function Login() {
         username: "",
         password: "",
         confirm_password: "",
-        role: "hunter"
+        role: "hunter",
+        email: "",
+        phone: ""
     });
     const [error, setError] = useState("");
     const navigate = useNavigate();
@@ -25,7 +27,17 @@ function Login() {
         try {
             let user;
             if (isSignup) {
-                user = await signupUser(formData);
+                const signupData = {
+                    username: formData.username,
+                    password: formData.password,
+                    confirm_password: formData.confirm_password, 
+                    role: formData.role
+                };
+                if (formData.role === "landlord"){
+                    signupData.email = formData.email;
+                    signupData.phone = formData.phone;
+                }
+                user = await signupUser(signupData);
             } 
             else {
                 user = await loginUser({
@@ -109,6 +121,34 @@ function Login() {
                                 <option value="landlord">Landlord</option>
                             </select>
                         </div>
+                        {formData.role === "landlord" && (
+                            <>
+                                <div className="form-group">
+                                    <label htmlFor="email">Email:</label>
+                                    <input
+                                        type="email"
+                                        id="email"
+                                        name="email"
+                                        value={formData.email}
+                                        onChange={handleChange}
+                                        placeholder="Enter your email"
+                                        required
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="phone">Phone:</label>
+                                    <input
+                                        type="tel"
+                                        id="phone"
+                                        name="phone"
+                                        value={formData.phone}
+                                        onChange={handleChange}
+                                        placeholder="e.g. +254 712 345 678"
+                                        required
+                                    />
+                                </div>
+                            </>
+                        )}
                     </>
                 )}
                 {error && <p className="error-message">{error}</p>}

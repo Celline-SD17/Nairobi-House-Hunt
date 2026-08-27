@@ -15,7 +15,7 @@ def seed_database():
         User.query.delete()
 
         db.session.commit()
-    #Generating House Hunters details
+        #Generating House Hunters details
         hunters = []
         for _ in range(10):
             hunter = User(
@@ -26,55 +26,58 @@ def seed_database():
                 role="hunter"
             )
             hunters.append(hunter)
-    #Generating landlords details
+        #Generating landlords details
         landlords = []
+
         for _ in range(5):
             landlord = User(
                 username=fake.unique.user_name(),
                 password_hash=bcrypt.generate_password_hash(
                     "password123"
                 ).decode("utf-8"),
-                role="landlord"
-            )
+                role="landlord",
+                email=fake.unique.email(),
+                phone=fake.unique.phone_number()
+                )
             landlords.append(landlord)
 
-            users = hunters + landlords
-            random.shuffle(users)
+        users = hunters + landlords
+        random.shuffle(users)
 
         db.session.add_all(users)
         db.session.commit()
-    #Areas to choose from
+        
         areas = [
-            "Kilimani",
-            "Lavington",
-            "Westlands",
-            "Parklands",
-            "Kileleshwa",
-            "Karen",
-            "Runda",
-            "South B",
-            "South C",
-            "Lang'ata",
-            "Roysambu",
-            "Kasarani",
-            "Ngong Road",
-            "Upper Hill",
-            "Hurlingham"
-        ]
-    #Property types
+                "Kilimani",
+                "Lavington",
+                "Westlands",
+                "Parklands",
+                "Kileleshwa",
+                "Karen",
+                "Runda",
+                "South B",
+                "South C",
+                "Lang'ata",
+                "Roysambu",
+                "Kasarani",
+                "Ngong Road",
+                "Upper Hill",
+                "Hurlingham"
+            ]
+        #Property types
         property_types = [
-            "Apartment",
-            "Condominium",
-            "Maisonette",
-            "Townhouse"
-        ]
+                "Apartment",
+                "Condominium",
+                "Maisonette",
+                "Townhouse"
+            ]
         price_ranges ={
-            1: (15000, 90000),
-            2: (35000, 150000),
-            3: (70000, 250000),
-            4: (100000, 650000)
+                1: (15000, 90000),
+                2: (35000, 150000),
+                3: (70000, 250000),
+                4: (100000, 650000)
         }
-    #Properties data 
+        #Properties data 
         properties = []
 
         for _ in range(40):
@@ -104,7 +107,8 @@ def seed_database():
 
         db.session.add_all(properties)
         db.session.commit()
-    #Favorites
+
+        # Favorites
         favorites = []
         favorite_pairs = set()
 

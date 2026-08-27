@@ -81,6 +81,11 @@ def signup():
         user_data = UserSchema().load(data)
     except Exception as error:
         return{"errors": str(error)}, 400
+    if user_data["role"] == "landlord":
+        if not user_data.get("email") or not user_data.get("phone"):
+            return{
+                "error": "Landlords must provide an email and a phone number."
+            },400
     existing_user = User.query.filter_by(
         username=user_data["username"]
     ).first()
@@ -94,7 +99,9 @@ def signup():
     user = User(
         username=user_data["username"],
         password_hash=hashed_password,
-        role=user_data["role"]
+        role=user_data["role"],
+        email=user_data.get("email"),
+        phone=user_data.get("phone")
     )
     db.session.add(user)
     db.session.commit()
