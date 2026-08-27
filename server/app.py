@@ -23,10 +23,7 @@ app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 
 CORS(
     app, 
-    origins=[
-        "http://localhost:5173",
-        "https://nairobi-house-hunt-api.onrender.com/"
-        ],        
+    origins=["http://localhost:5173"],        
     supports_credentials=True
 )
 
