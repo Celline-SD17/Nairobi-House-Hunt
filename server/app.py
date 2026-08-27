@@ -23,7 +23,10 @@ app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 
 CORS(
     app, 
-    origins=["http://localhost:5173"],        
+    origins=[
+        "http://localhost:5173",
+        "https://nairobi-house-hunt-git-main-celline-sd17s-projects.vercel.app"
+        ],        
     supports_credentials=True
 )
 
