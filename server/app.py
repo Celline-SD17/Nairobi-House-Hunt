@@ -54,7 +54,7 @@ def check_authentication():
     if request.method == "OPTIONS":
         return
     open_access_list = [
-        "home",
+        "index",
         "about",
         "signup",
         "login",
