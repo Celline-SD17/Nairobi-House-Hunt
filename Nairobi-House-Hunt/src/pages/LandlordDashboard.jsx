@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import {
     fetchMyProperties,
@@ -13,7 +14,7 @@ function LandlordDashboard() {
     const [showForm, setShowForm] = useState(false);
     const [editingId, setEditingId] = useState(null);
 
-    const [formData, setFormData] = useState({
+    const emptyForm = {
         title: "",
         price: "",
         currency: "KES",
@@ -25,7 +26,9 @@ function LandlordDashboard() {
         bathrooms: "",
         property_type: "Apartment",
         description: ""
-    });
+    };
+
+    const [formData, setFormData] = useState(emptyForm);
 
     const loadProperties = () => {
         fetchMyProperties()
@@ -54,25 +57,19 @@ function LandlordDashboard() {
     };
 
     const resetForm = () => {
-        setFormData({
-            title: "",
-            price: "",
-            currency: "KES",
-            location: "",
-            county: "Nairobi",
-            city: "Nairobi",
-            area: "",
-            bedrooms: "",
-            bathrooms: "",
-            property_type: "Apartment",
-            description: ""
-        });
-
+        setFormData(emptyForm);
         setEditingId(null);
         setShowForm(false);
     };
 
-    const handleSubmit = async (event) => {
+    const handleAddClick = () => {
+        setError("");
+        setEditingId(null);
+        setFormData(emptyForm);
+        setShowForm((currentValue) => !currentValue);
+    };
+
+    const handleCreate = async (event) => {
         event.preventDefault();
         setError("");
 
@@ -84,13 +81,10 @@ function LandlordDashboard() {
         };
 
         try {
-            if (editingId) {
-                await updateProperty(editingId, propertyData);
-            } else {
-                await createProperty(propertyData);
-            }
+            await createProperty(propertyData);
 
-            resetForm();
+            setFormData(emptyForm);
+            setShowForm(false);
             loadProperties();
         } catch (error) {
             setError(error.message);
@@ -99,23 +93,43 @@ function LandlordDashboard() {
 
     const handleEdit = (property) => {
         setEditingId(property.id);
+        setError("");
 
         setFormData({
-            title: property.title,
-            price: property.price,
-            currency: property.currency,
-            location: property.location,
-            county: property.county,
-            city: property.city,
-            area: property.area,
-            bedrooms: property.bedrooms,
-            bathrooms: property.bathrooms,
-            property_type: property.property_type,
-            description: property.description
+            title: property.title || "",
+            price: property.price || "",
+            currency: property.currency || "KES",
+            location: property.location || "",
+            county: property.county || "Nairobi",
+            city: property.city || "Nairobi",
+            area: property.area || "",
+            bedrooms: property.bedrooms || "",
+            bathrooms: property.bathrooms || "",
+            property_type: property.property_type || "Apartment",
+            description: property.description || ""
         });
+    };
 
-        setShowForm(true);
+    const handleUpdate = async (event, propertyId) => {
+        event.preventDefault();
         setError("");
+
+        const propertyData = {
+            ...formData,
+            price: Number(formData.price),
+            bedrooms: Number(formData.bedrooms),
+            bathrooms: Number(formData.bathrooms)
+        };
+
+        try {
+            await updateProperty(propertyId, propertyData);
+
+            setEditingId(null);
+            setFormData(emptyForm);
+            loadProperties();
+        } catch (error) {
+            setError(error.message);
+        }
     };
 
     const handleDelete = async (propertyId) => {
@@ -147,15 +161,7 @@ function LandlordDashboard() {
 
             <button
                 className="add-property-button"
-                onClick={() => {
-                    if (showForm) {
-                        resetForm();
-                    } else {
-                        setShowForm(true);
-                        setEditingId(null);
-                        setError("");
-                    }
-                }}
+                onClick={handleAddClick}
             >
                 {showForm ? "Cancel" : "Add Property"}
             </button>
@@ -165,11 +171,9 @@ function LandlordDashboard() {
             {showForm && (
                 <form
                     className="property-form"
-                    onSubmit={handleSubmit}
+                    onSubmit={handleCreate}
                 >
-                    <h3>
-                        {editingId ? "Edit Property" : "Add Property"}
-                    </h3>
+                    <h3>Add Property</h3>
 
                     <div className="form-group">
                         <label htmlFor="title">Title</label>
@@ -285,22 +289,9 @@ function LandlordDashboard() {
                         />
                     </div>
 
-                    <div className="form-actions">
-                        <button type="submit">
-                            {editingId
-                                ? "Update Property"
-                                : "Create Property"}
-                        </button>
-
-                        {editingId && (
-                            <button
-                                type="button"
-                                onClick={resetForm}
-                            >
-                                Cancel Edit
-                            </button>
-                        )}
-                    </div>
+                    <button type="submit">
+                        Create Property
+                    </button>
                 </form>
             )}
 
@@ -309,46 +300,203 @@ function LandlordDashboard() {
             ) : (
                 <div className="property-grid">
                     {properties.map((property) => (
-                        <div
+                        <article
                             className="property-card"
                             key={property.id}
                         >
-                            <h3>{property.title}</h3>
-
-                            <p>
-                                KES{" "}
-                                {property.price.toLocaleString()}
-                            </p>
-
-                            <p>{property.location}</p>
-
-                            <p>
-                                {property.bedrooms} bedrooms ·{" "}
-                                {property.bathrooms} bathrooms
-                            </p>
-
-                            <p>{property.property_type}</p>
-
-                            <p>{property.description}</p>
-
-                            <div className="property-actions">
-                                <button
-                                    onClick={() =>
-                                        handleEdit(property)
+                            {editingId === property.id ? (
+                                <form
+                                    className="property-edit-form"
+                                    onSubmit={(event) =>
+                                        handleUpdate(
+                                            event,
+                                            property.id
+                                        )
                                     }
                                 >
-                                    Edit
-                                </button>
+                                    <h3>Edit Property</h3>
 
-                                <button
-                                    onClick={() =>
-                                        handleDelete(property.id)
-                                    }
-                                >
-                                    Delete
-                                </button>
-                            </div>
-                        </div>
+                                    <div className="form-group">
+                                        <label htmlFor={`title-${property.id}`}>
+                                            Title
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id={`title-${property.id}`}
+                                            name="title"
+                                            value={formData.title}
+                                            onChange={handleChange}
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label htmlFor={`price-${property.id}`}>
+                                            Monthly Rent
+                                        </label>
+                                        <input
+                                            type="number"
+                                            id={`price-${property.id}`}
+                                            name="price"
+                                            value={formData.price}
+                                            onChange={handleChange}
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label htmlFor={`location-${property.id}`}>
+                                            Location
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id={`location-${property.id}`}
+                                            name="location"
+                                            value={formData.location}
+                                            onChange={handleChange}
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label htmlFor={`area-${property.id}`}>
+                                            Area
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id={`area-${property.id}`}
+                                            name="area"
+                                            value={formData.area}
+                                            onChange={handleChange}
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label htmlFor={`bedrooms-${property.id}`}>
+                                            Bedrooms
+                                        </label>
+                                        <input
+                                            type="number"
+                                            id={`bedrooms-${property.id}`}
+                                            name="bedrooms"
+                                            min="1"
+                                            value={formData.bedrooms}
+                                            onChange={handleChange}
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label htmlFor={`bathrooms-${property.id}`}>
+                                            Bathrooms
+                                        </label>
+                                        <input
+                                            type="number"
+                                            id={`bathrooms-${property.id}`}
+                                            name="bathrooms"
+                                            min="1"
+                                            value={formData.bathrooms}
+                                            onChange={handleChange}
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label htmlFor={`property-type-${property.id}`}>
+                                            Property Type
+                                        </label>
+
+                                        <select
+                                            id={`property-type-${property.id}`}
+                                            name="property_type"
+                                            value={formData.property_type}
+                                            onChange={handleChange}
+                                        >
+                                            <option value="Apartment">
+                                                Apartment
+                                            </option>
+                                            <option value="Condominium">
+                                                Condominium
+                                            </option>
+                                            <option value="Maisonette">
+                                                Maisonette
+                                            </option>
+                                            <option value="Townhouse">
+                                                Townhouse
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label htmlFor={`description-${property.id}`}>
+                                            Description
+                                        </label>
+
+                                        <textarea
+                                            id={`description-${property.id}`}
+                                            name="description"
+                                            value={formData.description}
+                                            onChange={handleChange}
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className="property-actions">
+                                        <button type="submit">
+                                            Update Property
+                                        </button>
+
+                                        <button
+                                            type="button"
+                                            onClick={resetForm}
+                                        >
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </form>
+                            ) : (
+                                <>
+                                    <h3>{property.title}</h3>
+
+                                    <p>
+                                        {property.currency}{" "}
+                                        {property.price.toLocaleString()}
+                                    </p>
+
+                                    <p>{property.location}</p>
+
+                                    <p>
+                                        {property.bedrooms} bedrooms ·{" "}
+                                        {property.bathrooms} bathrooms
+                                    </p>
+
+                                    <p>{property.property_type}</p>
+
+                                    <p>{property.description}</p>
+
+                                    <div className="property-actions">
+                                        <button
+                                            onClick={() =>
+                                                handleEdit(property)
+                                            }
+                                        >
+                                            Edit
+                                        </button>
+
+                                        <button
+                                            onClick={() =>
+                                                handleDelete(
+                                                    property.id
+                                                )
+                                            }
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
+                                </>
+                            )}
+                        </article>
                     ))}
                 </div>
             )}
@@ -357,4 +505,3 @@ function LandlordDashboard() {
 }
 
 export default LandlordDashboard;
-

@@ -100,6 +100,32 @@ function PropertyDetails() {
                 <strong>Description:</strong>
             </p>
             <p>{property.description}</p>
+
+            {property.landlord && (
+            <section className="landlord-contact">
+                <h3>Contact Landlord</h3>
+
+                <p>
+                    <strong>Name:</strong>{" "}
+                    {property.landlord.username}
+                </p>
+
+                <p>
+                    <strong>Email:</strong>{" "}
+                    <a href={`mailto:${property.landlord.email}`}>
+                        {property.landlord.email}
+                    </a>
+                </p>
+
+                <p>
+                    <strong>Phone:</strong>{" "}
+                    <a href={`tel:${property.landlord.phone}`}>
+                        {property.landlord.phone}
+                    </a>
+                </p>
+            </section>
+        )}
+
         </main>
     );
 }

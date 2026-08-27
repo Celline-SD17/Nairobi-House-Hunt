@@ -58,8 +58,7 @@ function Properties(){
         return "login required";
     }
     if (user.role !== "hunter") {
-        setError("Only house hunters can save favorites.");
-        return;
+        return "hunter-only";
     }
     const existingFavorite = favorites.find(
         (favorite) => favorite.property_id === propertyId

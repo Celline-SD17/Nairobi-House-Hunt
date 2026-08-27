@@ -11,12 +11,19 @@ function PropertyCard({ property, isFavorite, onToggleFavorite }){
             setFavoriteError("Please log in to add properties to your favorites.");
             setTimeout(() => {
                 setFavoriteError("");
-            }, 1200);
+            }, 1500);
         }
-        else {
+        else if(result === "hunter-only"){
+
+            setFavoriteError("Only house hunters can save favorites.");
+            setTimeout(() => {
+                setFavoriteError("");
+            }, 1500);
+        } else {
             setFavoriteError("");
         }
     }; 
+
     return (
         <article className="property-card"> 
             <h2>{property.title}</h2>

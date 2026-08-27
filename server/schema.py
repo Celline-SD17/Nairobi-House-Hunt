@@ -6,6 +6,8 @@ class UserSchema(Schema):
     password = fields.Str(load_only=True, required=True)
     confirm_password = fields.Str(load_only=True, required=True)
     role = fields.Str(required=True, validate=lambda value: value in ["hunter", "landlord"])
+    email = fields.Email(allow_none=True, load_default=None)
+    phone = fields.Str(allow_none=True, load_default=None)
 
     @validates_schema
     def validate_passwords(self, data, **kwargs):
@@ -26,6 +28,11 @@ class PropertySchema(Schema):
     property_type = fields.Str(required=True)
     description = fields.Str(required=True)
     landlord_id = fields.Int(dump_only=True) 
+    landlord = fields.Nested(
+        UserSchema, 
+        only=("id", "username", "email", "phone"), 
+        dump_only=True
+    )
 
 class FavoriteSchema(Schema):
     id = fields.Int(dump_only=True)
