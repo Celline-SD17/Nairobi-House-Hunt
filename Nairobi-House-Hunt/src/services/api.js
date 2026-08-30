@@ -211,3 +211,45 @@ export async function deleteProperty(propertyId) {
         throw new Error(data.error || "Failed to delete property");
     }
 }
+
+// Updating account details
+export async function updateAccount(accountData) {
+    const response = await fetch(`${API_URL}/account`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        credentials: "include",
+        body: JSON.stringify(accountData)
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(
+            data.error || JSON.stringify(data.errors) || "Failed to update account"
+        );
+    }
+
+    return data;
+}
+
+// Deleting account
+export async function deleteAccount() {
+    const response = await fetch(`${API_URL}/account`, {
+        method: "DELETE",
+        credentials: "include"
+    });
+
+    if (!response.ok) {
+        let data = {};
+
+        try {
+            data = await response.json();
+        } catch {
+            // 204 No Content
+        }
+
+        throw new Error(data.error || "Failed to delete account");
+    }
+}

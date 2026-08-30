@@ -11,7 +11,7 @@ from flask_cors import CORS
 
 from configs import db
 from models import User, Property, Favorite
-from schema import UserSchema, PropertySchema, FavoriteSchema
+from schema import UserSchema, PropertySchema, FavoriteSchema, AccountUpdateSchema
 
 load_dotenv()
 
@@ -20,14 +20,15 @@ app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
-app.config["SESSION_COOKIE_SAMESITE"] = "None"
-app.config["SESSION_COOKIE_SECURE"] = True
+is_production = os.getenv("FLASK_ENV") == "production"
 
+app.config["SESSION_COOKIE_SAMESITE"] = "None" if is_production else "Lax"
+app.config["SESSION_COOKIE_SECURE"] = is_production
 CORS(
     app, 
     origins=[
         "http://localhost:5173",
-        "https://nairobi-house-hunt-git-main-celline-sd17s-projects.vercel.app"
+        "https://nairobi-house-hunt.vercel.app"
         ],        
     supports_credentials=True
 )
@@ -167,6 +168,81 @@ def logout():
     session.clear()
     return{}, 204
 
+#Editing Account details
+@app.patch("/account")
+def update_account():
+    user = User.query.get(session.get("user_id"))
+
+    if not user:
+        return {"error": "User not found"}, 404
+
+    try:
+        data = AccountUpdateSchema().load(request.get_json() or {})
+    except ValidationError as error:
+        return {"errors": error.messages}, 400
+
+    if "username" in data:
+        existing_user = User.query.filter(
+            User.username == data["username"],
+            User.id != user.id
+        ).first()
+
+        if existing_user:
+            return {"error": "Username already exists."}, 400
+
+        user.username = data["username"]
+
+    if data.get("email"):
+        existing_user = User.query.filter(
+            User.email == data["email"],
+            User.id != user.id
+        ).first()
+
+        if existing_user:
+            return {"error": "Email already exists."}, 400
+
+        user.email = data["email"]
+
+    if data.get("phone"):
+        existing_user = User.query.filter(
+            User.phone == data["phone"],
+            User.id != user.id
+        ).first()
+
+        if existing_user:
+            return {"error": "Phone number already exists."}, 400
+
+        user.phone = data["phone"]
+
+    if "password" in data:
+        user.password_hash = bcrypt.generate_password_hash(
+            data["password"]
+        ).decode("utf-8")
+
+    db.session.commit()
+
+    return {
+    "id": user.id,
+    "username": user.username,
+    "role": user.role,
+    "email": user.email,
+    "phone": user.phone
+    }, 200
+
+#Delete Account
+@app.delete("/account")
+def delete_account():
+    user = User.query.get(session.get("user_id"))
+
+    if not user:
+        return {"error": "User not found"}, 404
+
+    db.session.delete(user)
+    db.session.commit()
+
+    session.clear()
+
+    return {}, 204
 
 #Properties routes
 @app.get("/properties")

@@ -126,7 +126,7 @@ video {
   transform-origin: left;
 }
 
-.navbar-links button {
+.navbar-links > button {
   border: 0;
   padding: 9px 16px;
   background: var(--color-text);
@@ -138,10 +138,392 @@ video {
     transform 0.2s ease;
 }
 
-.navbar-links button:hover {
+.navbar-links > button:hover {
   background: var(--color-accent);
   transform: translateY(-2px);
 }
+
+
+/* Navbar Account Menu */
+
+.account-menu {
+  position: relative;
+}
+
+.account-button {
+  border: 0;
+  padding: 9px 16px;
+  background: var(--color-text);
+  color: var(--color-surface);
+  border-radius: 999px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.account-button:hover {
+  background: var(--color-accent);
+  transform: translateY(-2px);
+}
+
+.account-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 50;
+
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+
+  width: 180px;
+  padding: 8px;
+
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+}
+
+.account-dropdown button {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 10px 12px;
+
+  border: 0;
+  border-radius: var(--radius-sm);
+
+  background: transparent;
+  color: var(--color-text);
+
+  text-align: left;
+  font: inherit;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.account-dropdown button:hover {
+  background: var(--color-bg);
+  color: var(--color-accent);
+}
+
+
+/* Account Menu */
+
+
+.account-page {
+  width: min(calc(100% - 40px), 900px);
+  margin: 0 auto;
+  padding: 72px 0 90px;
+}
+
+/* Account Header */
+
+.account-header {
+  max-width: 650px;
+  margin-bottom: 42px;
+}
+
+.account-header h2 {
+  margin: 0 0 16px;
+  font-size: clamp(3rem, 6vw, 5rem);
+  line-height: 0.95;
+  letter-spacing: -0.055em;
+}
+
+.account-header > p:last-child {
+  max-width: 580px;
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 1.02rem;
+  line-height: 1.7;
+}
+
+/* Account Details */
+
+.account-details,
+.account-edit-section {
+  padding: 38px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+}
+
+.account-details-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 30px;
+  margin-bottom: 32px;
+}
+
+.account-details-header h3 {
+  margin: 0;
+  font-size: 1.8rem;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+/* Account Grid Details*/
+
+.account-details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-border);
+}
+
+.account-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  padding: 22px;
+  background: var(--color-bg);
+}
+
+.account-detail span {
+  color: var(--color-muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.account-detail strong {
+  overflow-wrap: anywhere;
+  font-size: 1rem;
+}
+
+/* Account Form */
+
+.edit-account-button,
+.account-form-actions button[type="submit"] {
+  flex-shrink: 0;
+  padding: 12px 20px;
+  border: 2px solid var(--color-text);
+  border-radius: 999px;
+  background: var(--color-text);
+  color: var(--color-surface);
+  font-weight: 800;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.edit-account-button:hover,
+.account-form-actions button[type="submit"]:hover {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  transform: translateY(-2px);
+}
+
+/* =Account Form */
+
+.account-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.account-form .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.account-form .form-group label {
+  color: var(--color-muted);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.account-form .form-group input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+  color: var(--color-text);
+  font: inherit;
+}
+
+.account-form .form-group input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 4px rgba(200, 92, 58, 0.12);
+}
+
+.account-form-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  grid-column: 1 / -1;
+  margin-top: 6px;
+}
+
+.cancel-account-button {
+  padding: 12px 20px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-weight: 800;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.cancel-account-button:hover {
+  border-color: var(--color-text);
+  background: var(--color-surface);
+  transform: translateY(-2px);
+}
+
+/* Account Messages */
+
+.account-page > .account-container > .success-message,
+.account-page > .account-container > .error-message {
+  margin: 0 0 22px;
+  padding: 14px 18px;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+}
+
+.account-page > .account-container > .success-message {
+  border-left: 4px solid #6d8b67;
+  background: #edf4eb;
+  color: #40563c;
+}
+
+.account-page > .account-container > .error-message {
+  border-left: 4px solid var(--color-accent);
+  background: #f8e9e4;
+  color: #7d3423;
+}
+
+/* Delete Account */
+
+.account-danger-zone {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  margin-top: 26px;
+  padding: 30px 32px;
+  border: 1px solid #d8b9ae;
+  border-radius: var(--radius-lg);
+  background: #fbf3f0;
+}
+
+.account-danger-zone .section-label {
+  margin-bottom: 10px;
+  color: var(--color-accent);
+}
+
+.account-danger-zone h3 {
+  margin: 0 0 8px;
+  font-size: 1.45rem;
+}
+
+.account-danger-zone p:last-child {
+  max-width: 500px;
+  margin: 0;
+  color: var(--color-muted);
+  line-height: 1.6;
+}
+
+.delete-account-button {
+  flex-shrink: 0;
+  padding: 12px 20px;
+  border: 2px solid var(--color-accent);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-accent);
+  font-weight: 800;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.delete-account-button:hover {
+  background: var(--color-accent);
+  color: var(--color-surface);
+  transform: translateY(-2px);
+}
+
+/*Mobile*/
+
+@media (max-width: 700px) {
+  .account-page {
+    width: min(calc(100% - 28px), 900px);
+    padding: 46px 0 65px;
+  }
+
+  .account-header h2 {
+    font-size: clamp(2.7rem, 13vw, 4rem);
+  }
+
+  .account-details,
+  .account-edit-section {
+    padding: 28px 22px;
+  }
+
+  .account-details-header {
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .edit-account-button {
+    width: 100%;
+  }
+
+  .account-details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .account-form {
+    grid-template-columns: 1fr;
+  }
+
+  .account-form-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .account-form-actions button {
+    width: 100%;
+  }
+
+  .account-danger-zone {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 28px 22px;
+  }
+
+  .delete-account-button {
+    width: 100%;
+  }
+}
+
 
 /* Main Layout*/
 

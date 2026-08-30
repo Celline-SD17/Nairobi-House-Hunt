@@ -8,6 +8,7 @@ import Favorites from "./pages/Favorites"
 import LandlordDashboard from "./pages/LandlordDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PropertyDetails from "./pages/PropertyDetails";
+import Account from "./pages/Account";
 
 function App() {
     return (
@@ -22,6 +23,7 @@ function App() {
                 <Route path="/properties" element={<Properties />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/account"element={<Account />} />
                 <Route path="/favorites" element={
                     <ProtectedRoute role="hunter">
                     <Favorites />

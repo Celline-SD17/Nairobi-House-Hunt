@@ -44,4 +44,17 @@ class FavoriteSchema(Schema):
         dump_only=True
     )
 
+class AccountUpdateSchema(Schema):
+    username = fields.Str(required=False)
+    password = fields.Str(load_only=True, required=False)
+    confirm_password = fields.Str(load_only=True, required=False)
+    email = fields.Email(allow_none=True, required=False)
+    phone = fields.Str(allow_none=True, required=False)
 
+    @validates_schema
+    def validate_passwords(self, data, **kwargs):
+        password = data.get("password")
+        confirm_password = data.get("confirm_password")
+
+        if password and password != confirm_password:
+            raise ValidationError("Passwords do not match.")
