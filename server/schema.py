@@ -58,3 +58,17 @@ class AccountUpdateSchema(Schema):
 
         if password and password != confirm_password:
             raise ValidationError("Passwords do not match.")
+
+
+class MessageSchema(Schema):
+    id = fields.Int(dump_only=True)
+    content = fields.Str(required=True)
+    created_at = fields.DateTime(dump_only=True)
+    is_read = fields.Bool(dump_only=True)
+
+    sender_id = fields.Int(dump_only=True)
+    receiver_id = fields.Int(dump_only=True)
+    property_id = fields.Int(required=True)
+    sender = fields.Nested(UserSchema, only=("id", "username"), dump_only=True)
+    receiver = fields.Nested(UserSchema, only=("id", "username"), dump_only=True)
+    property = fields.Nested(PropertySchema, only=("id", "title"), dump_only=True)
