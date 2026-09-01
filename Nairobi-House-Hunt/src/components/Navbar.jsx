@@ -1,11 +1,13 @@
+
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { logout as logoutUser } from "../services/api";
 
 function Navbar() {
-    const { user, logout } = useAuth();
+    const { user, logout, unreadCount } = useAuth();
     const navigate = useNavigate();
+
     const [showAccountMenu, setShowAccountMenu] = useState(false);
 
     const handleLogout = async () => {
@@ -46,6 +48,18 @@ function Navbar() {
 
                 {user?.role === "landlord" && (
                     <Link to="/dashboard">My Properties</Link>
+                )}
+
+                {user && (
+                    <Link to="/messages" className="messages-link">
+                        Messages
+
+                        {unreadCount > 0 && (
+                            <span className="message-count">
+                                {unreadCount}
+                            </span>
+                        )}
+                    </Link>
                 )}
 
                 {!user ? (
@@ -92,4 +106,3 @@ function Navbar() {
 }
 
 export default Navbar;
-

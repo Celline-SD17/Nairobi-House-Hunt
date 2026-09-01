@@ -9,6 +9,7 @@ import LandlordDashboard from "./pages/LandlordDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PropertyDetails from "./pages/PropertyDetails";
 import Account from "./pages/Account";
+import Messages from "./pages/Messages"; 
 
 function App() {
     return (
@@ -37,6 +38,7 @@ function App() {
                 } />
                 <Route path="/properties/:id" element={<PropertyDetails />} 
                 />
+                <Route path="/messages" element={<Messages />} />
             </Routes>
     </>
     );

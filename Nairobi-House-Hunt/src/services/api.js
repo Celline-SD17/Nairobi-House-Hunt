@@ -253,3 +253,94 @@ export async function deleteAccount() {
         throw new Error(data.error || "Failed to delete account");
     }
 }
+
+// Messaging
+// Fetch messages for the current user
+export async function fetchMessages() {
+    const response = await fetch(`${API_URL}/messages`, {
+        credentials: "include"
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(data.error || "Failed to fetch messages");
+    }
+
+    return data;
+}
+
+// Send a message about a property
+export async function sendMessage(propertyId, content) {
+    const response = await fetch(`${API_URL}/messages`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        credentials: "include",
+        body: JSON.stringify({
+            property_id: propertyId,
+            content
+        })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(
+            data.error ||
+            JSON.stringify(data.errors) ||
+            "Failed to send message"
+        );
+    }
+
+    return data;
+}
+
+// Reply to a message
+export async function replyToMessage(messageId, content) {
+    const response = await fetch(
+        `${API_URL}/messages/${messageId}/reply`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include",
+            body: JSON.stringify({ content })
+        }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(
+            data.error ||
+            JSON.stringify(data.errors) ||
+            "Failed to send reply"
+        );
+    }
+
+    return data;
+}
+
+// Mark a message as read
+export async function markMessageAsRead(messageId) {
+    const response = await fetch(
+        `${API_URL}/messages/${messageId}/read`,
+        {
+            method: "PATCH",
+            credentials: "include"
+        }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(
+            data.error || "Failed to mark message as read"
+        );
+    }
+
+    return data;
+}
