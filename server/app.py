@@ -142,7 +142,9 @@ def login():
     return {
         "id": user.id,
         "username": user.username,
-        "role": user.role
+        "role": user.role, 
+        "email": user.email,
+        "phone": user.phone
     }, 200
 
 #Checking Sessions
