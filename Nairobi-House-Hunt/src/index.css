@@ -2473,13 +2473,18 @@ main {
   padding: 0;
 }
 
+.favorites-page .property-grid {
+  align-items:start;
+}
+
 /* Favorite Card */
 
 .favorite-card {
   display: flex;
   flex-direction: column;
   min-width: 0;
-  min-height: 100%;
+  min-height: 0;
+  align-self: start;
   padding: 28px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
@@ -2530,7 +2535,7 @@ main {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
-  margin-top: auto;
+  margin-top: 12px;
 }
 
 .favorite-card .property-actions a,
@@ -2624,6 +2629,80 @@ main {
   color: #7d3423;
   text-align: center;
 }
+
+/* Favorite Message Form  */ 
+.favorite-message-form { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 10px; 
+  margin-top: 18px; 
+  padding: 18px; 
+  border: 1px solid var(--color-border); 
+  border-radius: var(--radius-md); 
+  background: var(--color-bg); 
+} 
+.favorite-message-form label { 
+  color: var(--color-muted); 
+  font-size: 0.72rem; 
+  font-weight: 800; 
+  letter-spacing: 0.08em; 
+  text-transform: uppercase; 
+} 
+.favorite-message-form textarea { 
+  width: 100%; 
+  min-height: 120px; 
+  padding: 12px 14px; 
+  border: 1px solid var(--color-border); 
+  border-radius: var(--radius-sm); 
+  background: var(--color-surface); 
+  color: var(--color-text); 
+  font: inherit; 
+  line-height: 1.6; 
+  resize: vertical; 
+} 
+.favorite-message-form textarea:focus { 
+  outline: none; 
+  border-color: var(--color-accent); 
+  box-shadow: 0 0 0 4px rgba(200, 92, 58, 0.12); 
+} 
+.favorite-message-form .property-actions { 
+  margin-top: 2px; 
+} 
+/* Send Message button */ 
+.favorites-page .favorite-card > .property-actions:first-of-type { 
+  display: flex; 
+  flex-wrap: wrap; 
+  gap: 10px; 
+} 
+.favorites-page .favorite-card > .property-actions:first-of-type button { 
+  border: 2px solid var(--color-text); 
+  border-radius: 999px; 
+  background: var(--color-text); 
+  color: var(--color-surface); 
+  font-weight: 800; 
+  padding: 11px 16px; 
+  transition: background 0.2s ease, 
+  border-color 0.2s ease, 
+  transform 0.2s ease;
+ } 
+ .favorites-page .favorite-card > .property-actions:first-of-type button:hover { 
+  background: var(--color-accent); 
+  border-color: var(--color-accent); 
+  transform: translateY(-2px); 
+} 
+/* Mobile  */ 
+@media (max-width: 700px) {
+   .favorite-message-form { 
+    padding: 16px; 
+  } 
+  .favorites-page .favorite-card > .property-actions:first-of-type { 
+    flex-direction: column; 
+  } 
+  .favorites-page .favorite-card > .property-actions:first-of-type a, .favorites-page .favorite-card > .property-actions:first-of-type button { 
+    width: 100%; 
+  } 
+}
+
 
 /* Responsive */
 
@@ -3019,6 +3098,7 @@ min(calc(100% - 40px), 1200px);
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 24px;
   padding: 0;
+  align-items: start;
 }
 
 /* Property Card */
@@ -3027,7 +3107,8 @@ min(calc(100% - 40px), 1200px);
   display: flex;
   flex-direction: column;
   min-width: 0;
-  min-height: 100%;
+  min-height: 0;
+  align-self: start;
   padding: 28px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
@@ -3077,7 +3158,7 @@ min(calc(100% - 40px), 1200px);
 .landlord-dashboard .property-actions {
   display: flex;
   gap: 10px;
-  margin-top: auto;
+  margin-top: 12px;
   padding-top: 22px;
 }
 

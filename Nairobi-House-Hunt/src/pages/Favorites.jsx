@@ -4,7 +4,8 @@ import { Link } from "react-router-dom";
 import {
     fetchFavorites,
     updateFavorite,
-    deleteFavorite
+    deleteFavorite, 
+    sendMessage
 } from "../services/api";
 
 function Favorites() {
@@ -13,11 +14,13 @@ function Favorites() {
     const [error, setError] = useState("");
     const [editingId, setEditingId] = useState(null);
     const [notes, setNotes] = useState("");
+    const [messagingId, setMessagingId] = useState(null);
+    const [messageText, setMessageText] = useState("");
+    const [sendingMessage, setSendingMessage] = useState(false);
 
     const loadFavorites = () => {
         fetchFavorites()
             .then((data) => {
-                console.log("FAVORITES DATA:", data);
                 setFavorites(data);
             })
             .catch((error) => {
@@ -31,6 +34,31 @@ function Favorites() {
     useEffect(() => {
         loadFavorites();
     }, []);
+
+    const handleSendMessage = async (propertyId) => {
+        const content = messageText.trim();
+
+        if (!content) {
+            return;
+        }
+
+        setSendingMessage(true);
+        setError("");
+
+        try {
+            await sendMessage(propertyId, content);
+
+            setMessageText("");
+            setMessagingId(null);
+
+            window.alert("Message sent successfully.");
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setSendingMessage(false);
+        }
+    };
+
 
     const handleEdit = (favorite) => {
         setEditingId(favorite.id);
@@ -128,10 +156,70 @@ function Favorites() {
                                 {favorite.property.property_type}
                             </p>
                             <div className="property-actions">
+
                                 <Link to={`/properties/${favorite.property.id}`}>
                                     View Listing
                                 </Link>
+
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setMessagingId(
+                                            messagingId === favorite.id
+                                                ? null
+                                                : favorite.id
+                                        );
+                                        setMessageText("");
+                                    }}
+                                >
+                                    Make an Inquiry
+                                </button>
                             </div>
+
+                            {messagingId === favorite.id && (
+                                <div className="favorite-message-form">
+                                    <label htmlFor={`message-${favorite.id}`}>
+                                        Message Landlord
+                                    </label>
+
+                                    <textarea
+                                        id={`message-${favorite.id}`}
+                                        value={messageText}
+                                        onChange={(event) =>
+                                            setMessageText(event.target.value)
+                                        }
+                                        placeholder="Hi, I'm interested in this property. Is it still available?"
+                                        rows="4"
+                                    />
+
+                                    <div className="property-actions">
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                handleSendMessage(
+                                                    favorite.property.id
+                                                )
+                                            }
+                                            disabled={sendingMessage}
+                                        >
+                                            {sendingMessage
+                                                ? "Sending..."
+                                                : "Send Message"}
+                                        </button>
+
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setMessagingId(null);
+                                                setMessageText("");
+                                            }}
+                                        >
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+
 
                             {editingId === favorite.id ? (
                                 <div className="favorite-notes">
