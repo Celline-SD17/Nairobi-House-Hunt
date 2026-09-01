@@ -10,8 +10,8 @@ from flask_cors import CORS
 
 
 from configs import db
-from models import User, Property, Favorite
-from schema import UserSchema, PropertySchema, FavoriteSchema, AccountUpdateSchema
+from models import User, Property, Favorite, Message
+from schema import UserSchema, PropertySchema, FavoriteSchema, AccountUpdateSchema, MessageSchema
 
 load_dotenv()
 
@@ -488,6 +488,137 @@ def delete_favorite(id):
     db.session.delete(favorite)
     db.session.commit()
     return {}, 204
+
+
+# Messaging Landlords
+@app.post("/messages")
+def send_message():
+    user = require_role("hunter")
+
+    if isinstance(user, tuple):
+        return user
+
+    data = request.get_json() or {}
+
+    try:
+        message_data = MessageSchema().load(data)
+    except ValidationError as error:
+        return {"errors": error.messages}, 400
+
+    property = db.session.get(Property, message_data["property_id"])
+
+    if not property:
+        return {"error": "Property not found"}, 404
+
+    # The landlord is automatically taken from the property owner
+    receiver = property.landlord
+
+    if not receiver:
+        return {"error": "This property has no landlord"}, 404
+
+    message = Message(
+        content=message_data["content"],
+        sender_id=user.id,
+        receiver_id=receiver.id,
+        property_id=property.id
+    )
+
+    db.session.add(message)
+    db.session.commit()
+
+    return MessageSchema().dump(message), 201   
+
+
+# Replying to a house hunter's message
+
+@app.post("/messages/<int:id>/reply")
+def reply_to_message(id):
+    user = get_current_user()
+
+    if not user:
+        return {"error": "Unauthorized"}, 401
+
+    original_message = db.session.get(Message, id)
+
+    if not original_message:
+        return {"error": "Message not found"}, 404
+
+    # Only people involved in this conversation can reply
+    if user.id not in (
+        original_message.sender_id,
+        original_message.receiver_id
+    ):
+        return {"error": "Forbidden"}, 403
+
+    # Send the reply to the other participant
+    receiver_id = (
+        original_message.receiver_id
+        if user.id == original_message.sender_id
+        else original_message.sender_id
+    )
+
+    data = request.get_json() or {}
+
+    content = data.get("content", "").strip()
+
+    if not content:
+        return {"error": "Message content is required"}, 400
+
+    reply = Message(
+        content=content,
+        sender_id=user.id,
+        receiver_id=receiver_id,
+        property_id=original_message.property_id
+    )
+
+    db.session.add(reply)
+    db.session.commit()
+
+    return MessageSchema().dump(reply), 201
+
+
+# Getting messages for the current user
+@app.get("/messages")
+def get_messages():
+    user = get_current_user()
+
+    if not user:
+        return {"error": "Unauthorized"}, 401
+
+    messages = Message.query.filter(
+        db.or_(
+            Message.sender_id == user.id,
+            Message.receiver_id == user.id
+        )
+    ).order_by(Message.created_at.desc()).all()
+
+    return MessageSchema(many=True).dump(messages), 200
+
+
+# Mark a message as read
+@app.patch("/messages/<int:id>/read")
+def mark_message_as_read(id):
+    user = get_current_user()
+
+    if not user:
+        return {"error": "Unauthorized"}, 401
+
+    message = db.session.get(Message, id)
+
+    if not message:
+        return {"error": "Message not found"}, 404
+
+    # Only the recipient can mark a message as read
+    if message.receiver_id != user.id:
+        return {"error": "Forbidden"}, 403
+
+    message.is_read = True
+    db.session.commit()
+
+    return MessageSchema().dump(message), 200
+
+
+
 
 if __name__ == "__main__":
     app.run(debug=True) 

@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { fetchMessages } from "../services/api";
 
 const AuthContext = createContext();
 const API_URL = import.meta.env.VITE_API_URL;
@@ -6,6 +7,23 @@ const API_URL = import.meta.env.VITE_API_URL;
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [unreadCount, setUnreadCount] = useState(0);
+
+    const loadUnreadCount = async (currentUser) => { 
+        try { 
+            const messages = await fetchMessages(); 
+            const unreadMessages = messages.filter( (message) => 
+                message.receiver_id === currentUser.id && 
+                !message.is_read ); 
+                setUnreadCount(unreadMessages.length); 
+        } catch (error) { 
+                console.error( 
+                    "Failed to load unread messages:",
+                     error 
+                ); 
+                setUnreadCount(0); 
+        } 
+        };
 
     useEffect(() => {
         fetch(`${API_URL}/check_session`, {
@@ -18,19 +36,22 @@ export function AuthProvider({ children }) {
 
                 return response.json();
             })
-            .then((data) => {
-                setUser(data);
+            .then(async (data) => { 
+                setUser(data); 
+                await loadUnreadCount(data); 
             })
             .catch(() => {
                 setUser(null);
+                setUnreadCount(0);
             })
             .finally(() => {
                 setLoading(false);
             });
     }, []);
 
-    const login = (userData) => {
+    const login = async(userData) => {
         setUser(userData);
+        await loadUnreadCount(userData);
     };
 
     const updateUser = (userData) => {
@@ -42,6 +63,7 @@ export function AuthProvider({ children }) {
 
     const logout = () => {
         setUser(null);
+        setUnreadCount(0);
     };
 
     return (
@@ -51,7 +73,9 @@ export function AuthProvider({ children }) {
                 loading,
                 login,
                 updateUser,
-                logout
+                logout, 
+                unreadCount,
+                setUnreadCount
             }}
         >
             {children}

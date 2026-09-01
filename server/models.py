@@ -14,6 +14,8 @@ class User(db.Model):
 
     properties = db.relationship("Property", back_populates="landlord", cascade="all, delete-orphan")
     favorites = db.relationship("Favorite", back_populates="user", cascade="all, delete-orphan")
+    sent_messages = db.relationship("Message", foreign_keys="Message.sender_id", back_populates="sender", cascade="all, delete-orphan")
+    received_messages = db.relationship("Message", foreign_keys="Message.receiver_id", back_populates="receiver", cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"<User {self.username}>"
@@ -39,6 +41,7 @@ class Property(db.Model):
     landlord_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     landlord = db.relationship("User", back_populates="properties")
     favorites = db.relationship("Favorite", back_populates="property", cascade="all, delete-orphan")
+    messages = db.relationship("Message", back_populates="property", cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"<Property {self.title}>"
@@ -59,3 +62,23 @@ class Favorite(db.Model):
 
     def __repr__(self):
         return f"<Favorite User {self.user_id} Property{self.property_id}>"
+
+
+class Message(db.Model):
+    __tablename__ = "messages"
+
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text, nullable=False)
+    is_read = db.Column(db.Boolean, default=False, nullable=False)
+    created_at = db.Column(db.DateTime, default=db.func.now(), nullable=False)
+    sender_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    receiver_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    property_id = db.Column(db.Integer, db.ForeignKey("properties.id"), nullable=False)
+
+    sender = db.relationship( "User",foreign_keys=[sender_id], back_populates="sent_messages")
+    receiver = db.relationship("User", foreign_keys=[receiver_id], back_populates="received_messages")
+    property = db.relationship("Property", back_populates="messages")
+    
+
+    def __repr__(self):
+        return f"<Message {self.id}>"
