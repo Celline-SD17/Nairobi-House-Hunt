@@ -159,6 +159,9 @@ http://localhost:5173
     * Remove properties from favorites.
     * Add and edit notes on favorite properties.
     * Browse properties using pagination.
+    * Send messages to landlords from property listings or saved favorites.
+    * View and reply to messages.
+    * Receive unread message notifications.
     * View and update their account information.
     * Change their password.
     * Delete their account.
@@ -174,6 +177,8 @@ http://localhost:5173
     * Add new properties.
     * Edit their own properties.
     * Delete their own properties.
+    * Receive messages from house hunters.
+    * Reply to house hunters.
     * Update their account information.
     * Change their password.
     * Delete their account.
@@ -190,6 +195,7 @@ http://localhost:5173
 * Landlords can manage only their own property listings.
 * House hunters can manage only their own favorites.
 * Users can update or delete only their own accounts.
+* Only users involved in a conversation can view or reply to those messages.
 * Passwords are stored as password hashes rather than plain text.
 
 ### Account Management
@@ -233,6 +239,13 @@ http://localhost:5173
     * Removing a property.
 
 - Each house hunter has access only to their own favorites.
+
+### Messaging
+- House hunters can send property-specific messages to landlords from property listings or saved favorites.
+- Landlords and house hunters can reply to messages.
+- Messages have individual read/unread status.
+- Unread messages are displayed through a notification count in the navigation bar.
+- Users can view and reply only to messages in which they are the sender or receiver.
 
 ### Pagination
 
@@ -300,6 +313,18 @@ GET /properties?page=1&per_page=10
 | GET    | `/favorites/<id>` | Returns a specific favorite                           | House Hunter |
 | PATCH  | `/favorites/<id>` | Updates notes for a favorite                          | House Hunter |
 | DELETE | `/favorites/<id>` | Removes a favorite                                    | House Hunter |
+
+
+### Messages
+
+| Method | Endpoint               | Description                                      | Access            |
+| ------ | ---------------------- | ------------------------------------------------ | ----------------- |
+| POST   | `/messages`            | Sends a message about a property                 | House Hunter      |
+| GET    | `/messages`            | Returns messages involving the authenticated user | Authenticated     |
+| POST   | `/messages/<id>/reply` | Replies to a message                             | Sender or Receiver |
+| PATCH  | `/messages/<id>/read`  | Marks a received message as read                  | Recipient         |
+```
+
 
 ### Example API Request
 
